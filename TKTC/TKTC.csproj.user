@@ -1,0 +1,11 @@
+<Project>
+    <!-- Custom Variables -->
+    <PropertyGroup>
+        <GameDirectory>$(CW_GAMEFILES)</GameDirectory>
+    </PropertyGroup>
+
+    <!-- Game Directories - Do Not Modify -->
+    <PropertyGroup>
+        <ManagedDirectory>$(GameDirectory)Content Warning_Data\Managed\</ManagedDirectory>
+    </PropertyGroup>
+</Project>

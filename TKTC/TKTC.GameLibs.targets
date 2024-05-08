@@ -1,0 +1,24 @@
+<Project>
+    <PropertyGroup>
+        <CI_REFERENCES>libs/</CI_REFERENCES>
+        <GameLibsDir Condition="'$(CI)' != 'true'">$(CW_REFERENCES)</GameLibsDir>
+        <GameLibsDir Condition="'$(CI)' == 'true'">$(CI_REFERENCES)</GameLibsDir>
+    </PropertyGroup>
+    
+    <!-- Unzip stripped  -->
+    <Target Name="Test" BeforeTargets="Build" Condition="'$(CI)' == 'true'">
+        <Unzip DestinationFolder="$(CI_REFERENCES)" SourceFiles="refs.zip"/>
+    </Target>
+    
+    <!-- Strip and zip on local machines build success -->
+    <Target Name="StripPublicizePostBuild" AfterTargets="Build" Condition="'$(CI)' != 'true' and '$(Configuration)' == 'Release'">
+        <MakeDir Directories="$(CI_REFERENCES)"/>
+        <ItemGroup>
+            <GameLibReferences Include="@(Reference)" Condition="'%(Reference.GameLib)' == 'true' "/>
+        </ItemGroup>
+        <Exec Condition="'@(GameLibReferences)' != ''" 
+              Command="dotnet assembly-publicizer &quot;%(GameLibReferences.Identity)&quot; --strip-only --overwrite --output &quot;$(CI_REFERENCES)%(FileName).dll&quot;" />
+        <ZipDirectory DestinationFile="refs.zip" SourceDirectory="$(CI_REFERENCES)" Overwrite="true" />
+        <RemoveDir Directories="$(CI_REFERENCES)"/>
+    </Target>
+</Project>

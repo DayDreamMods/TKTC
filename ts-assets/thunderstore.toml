@@ -1,0 +1,29 @@
+[config]
+schemaVersion = "0.0.1"
+
+[general]
+repository = "https://thunderstore.io"
+
+[package]
+namespace = "TKTC"
+name = "TeamKillTotalConversion"
+description = "A mod for Content Warning."
+websiteUrl = "https://github.com/TKTotalConversion/TKTC"
+containsNsfwContent = false
+[package.dependencies]
+BepInEx-BepInExPack = "5.4.2100"
+
+[build]
+icon = "icon.png"
+readme = "README.md"
+outdir = "../dist"
+
+[[build.copy]]
+source = "../TKTC/bin/Release/netstandard2.1/TeamKillTotalConversion.dll"
+target = "/BepInEx/plugins/TKTC/"
+
+[publish]
+communities = [ "content-warning" ]
+[publish.categories]
+content-warning = [ "mods" ]
+# For a list of valid tags, look at the slug values in https://thunderstore.io/api/experimental/community/content-warning/category/
