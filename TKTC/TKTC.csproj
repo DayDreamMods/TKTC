@@ -5,6 +5,8 @@
     <PropertyGroup>
         <AssemblyName>TeamKillTotalConversion</AssemblyName>
         <Product>TKTC</Product>
+        <Configurations>Debug;Release;ShoddyGameLibs</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <!-- Project Properties -->
