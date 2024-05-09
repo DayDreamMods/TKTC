@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <CI_REFERENCES>$(MSBuildProjectDirectory)/libs/</CI_REFERENCES>
+        <CI_REFERENCES>$(MSBuildSolutionDirectory)/libs/</CI_REFERENCES>
         <GameLibsDir Condition="'$(CI)' != 'true'">$(CW_REFERENCES)</GameLibsDir>
         <GameLibsDir Condition="'$(CI)' == 'true'">$(CI_REFERENCES)</GameLibsDir>
     </PropertyGroup>
