@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKTC", "TKTC\TKTC.csproj", "{22E32C34-3D56-480D-A101-22E59FE67A3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TKTC.Requires", "TKTC.Requires\TKTC.Requires.csproj", "{BD61A9AA-C36D-4326-AF43-3438401F8E23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,5 +17,11 @@ Global
 		{22E32C34-3D56-480D-A101-22E59FE67A3D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22E32C34-3D56-480D-A101-22E59FE67A3D}.ShoddyGameLibs|Any CPU.ActiveCfg = ShoddyGameLibs|Any CPU
 		{22E32C34-3D56-480D-A101-22E59FE67A3D}.ShoddyGameLibs|Any CPU.Build.0 = ShoddyGameLibs|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.ShoddyGameLibs|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.ShoddyGameLibs|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
