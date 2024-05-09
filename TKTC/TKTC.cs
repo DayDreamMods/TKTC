@@ -1,3 +1,4 @@
+using System;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -17,6 +18,9 @@ public class TKTC : BaseUnityPlugin {
         Instance = this;
 
         Patch();
+
+        Logger.LogDebug($"Encoded: {(byte)ShopItemCategory.TeamKillTotalConversion} | " +
+                        $"Reflection: {(byte)Enum.Parse<ShopItemCategory>(Requires.ShopItemCategory_TKTC_Name)}");
 
         Logger.LogDebug(GameHandler.Instance);
 

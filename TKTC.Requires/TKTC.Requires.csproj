@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../TKTC.GameLibs.targets" />
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <RootNamespace>TKTC</RootNamespace>
     </PropertyGroup>
-
+    
+    <ItemGroup>
+        <PackageReference Include="CessilCellsCeaChells" Version="0.2.0" PrivateAssets="all"/>
+        
+        <!-- Shoddy Game Libs References -->
+        <Reference Include="$(GameLibsDir)Assembly-CSharp.dll" GameLib="true"/>
+    </ItemGroup>
 </Project>
