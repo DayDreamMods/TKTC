@@ -28,7 +28,7 @@ jobs:
 
       - name: Unzip Refs
         run: |
-          unzip TKTC/refs.zip -d TKTC/libs
+          unzip TKTC/refs -d TKTC/libs
 
       - name: Pack Solution
         run: |
