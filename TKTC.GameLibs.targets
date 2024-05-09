@@ -3,6 +3,7 @@
         <CI_REFERENCES>$(ProjectDir)../libs/</CI_REFERENCES>
         <GameLibsDir Condition="'$(CI)' != 'true'">$(CW_REFERENCES)</GameLibsDir>
         <GameLibsDir Condition="'$(CI)' == 'true'">$(CI_REFERENCES)</GameLibsDir>
+        <Message Condition="'$(CI)' == 'true'" Importance="high" Text="Loading Refs! $(GameLibsDir)"/>
     </PropertyGroup>
 
     <!-- Strip and zip on local machines build success -->
