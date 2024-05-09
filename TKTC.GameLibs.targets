@@ -1,6 +1,7 @@
 <Project>
     <PropertyGroup>
-        <CI_REFERENCES>$(MSBuildSolutionDirectory)/libs/</CI_REFERENCES>
+        <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
+        <CI_REFERENCES>$(SolutionDir)/libs/</CI_REFERENCES>
         <GameLibsDir Condition="'$(CI)' != 'true'">$(CW_REFERENCES)</GameLibsDir>
         <GameLibsDir Condition="'$(CI)' == 'true'">$(CI_REFERENCES)</GameLibsDir>
     </PropertyGroup>
@@ -17,7 +18,7 @@
         </ItemGroup>
         <Exec Condition="'@(GameLibReferences)' != ''" 
               Command="dotnet assembly-publicizer &quot;%(GameLibReferences.Identity)&quot; --strip-only --overwrite --output &quot;$(CI_REFERENCES)%(FileName).dll&quot;" />
-        <ZipDirectory DestinationFile="$(MSBuildSolutionDirectory)/TKTC.GameLibs" SourceDirectory="$(CI_REFERENCES)" Overwrite="true" />
+        <ZipDirectory DestinationFile="$(SolutionDir)/TKTC.GameLibs" SourceDirectory="$(CI_REFERENCES)" Overwrite="true" />
         <RemoveDir Directories="$(CI_REFERENCES)"/>
     </Target>
 </Project>
