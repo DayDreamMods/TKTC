@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <!-- Strip and zip on local machines build success -->
-    <Target Name="StripPublicizePostBuild" AfterTargets="Build" Condition="'$(CI)' != 'true' and '$(Configuration)' == 'Release'">
+    <Target Name="StripPublicizePostBuild" AfterTargets="Build" Condition="'$(CI)' != 'true' and '$(Configuration)' == 'ShoddyGameLibs'">
         <MakeDir Directories="$(CI_REFERENCES)"/>
         <ItemGroup>
             <GameLibReferences Include="@(Reference)" Condition="'%(Reference.GameLib)' == 'true' "/>
