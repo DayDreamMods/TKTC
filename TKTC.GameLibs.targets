@@ -6,7 +6,7 @@
     </PropertyGroup>
     
     <Target Name="BuildLog" BeforeTargets="Build" Condition="'$(CI)' == 'true'">
-        <Message Condition="'$(CI)' == 'true'" Importance="high" Text="Loading Refs! $(GameLibsDir)"/>
+        <Message Importance="high" Text="Loading Refs! $(GameLibsDir)"/>
     </Target>
 
     <!-- Strip and zip on local machines build success -->
