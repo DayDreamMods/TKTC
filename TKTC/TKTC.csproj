@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="./TKTC.GameLibs.targets" />
     <Import Project="./TKTC.Packaging.targets" />
     <!-- BepInEx Properties -->
     <PropertyGroup>

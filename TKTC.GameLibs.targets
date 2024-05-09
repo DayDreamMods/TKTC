@@ -1,8 +1,8 @@
 <Project>
     <PropertyGroup>
-        <CI_REFERENCES>libs/</CI_REFERENCES>
+        <CI_REFERENCES>$(SolutionDir)libs/</CI_REFERENCES>
         <GameLibsDir Condition="'$(CI)' != 'true'">$(CW_REFERENCES)</GameLibsDir>
-        <GameLibsDir Condition="'$(CI)' == 'true'">$(ProjectDir)$(CI_REFERENCES)</GameLibsDir>
+        <GameLibsDir Condition="'$(CI)' == 'true'">$(CI_REFERENCES)</GameLibsDir>
     </PropertyGroup>
 
     <!-- Strip and zip on local machines build success -->
