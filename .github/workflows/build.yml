@@ -26,6 +26,10 @@ jobs:
           dotnet restore
           dotnet tool restore
 
+      - name: Unzip Refs
+        run: |
+          unzip TKTC/refs.zip -d TKTC/libs
+
       - name: Pack Solution
         run: |
           dotnet pack --configuration Release
