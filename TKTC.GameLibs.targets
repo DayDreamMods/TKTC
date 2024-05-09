@@ -13,7 +13,7 @@
         </ItemGroup>
         <Exec Condition="'@(GameLibReferences)' != ''" 
               Command="dotnet assembly-publicizer &quot;%(GameLibReferences.Identity)&quot; --strip-only --overwrite --output &quot;$(CI_REFERENCES)%(FileName).dll&quot;" />
-        <ZipDirectory DestinationFile="refs" SourceDirectory="$(CI_REFERENCES)" Overwrite="true" />
+        <ZipDirectory DestinationFile="$(SolutionDir)refs" SourceDirectory="$(CI_REFERENCES)" Overwrite="true" />
         <RemoveDir Directories="$(CI_REFERENCES)"/>
     </Target>
 </Project>
