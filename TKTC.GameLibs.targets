@@ -10,7 +10,7 @@
     </PropertyGroup>
     <ItemGroup>
         <!-- Shoddy Game Libs References -->
-        <PackageReference Include="ShoddyGameLibs" Version="1.1.5" PrivateAssets="all"
+        <PackageReference Include="ShoddyGameLibs" Version="1.2.3" PrivateAssets="all"
                           GameFilesDir="$(ContentWarning)" GameLibsFileDir="$(MSBuildThisFileDirectory)TKTC.GameLibs"
                           BuildGameLibs="$(ConfigBuild)" BuildFromGameLibs="$(SmartRefs)"/>
 
