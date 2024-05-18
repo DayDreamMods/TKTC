@@ -26,21 +26,16 @@
         -->
         <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
     </PropertyGroup>
-
+    
     <!-- Primary Package References -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all"/>
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.10" PrivateAssets="all"/>
-        <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all"/>
-        
-        <PackageReference Include="CessilCellsCeaChells.MSBuild" Version="0.2.0" PrivateAssets="all"/>
-        <ProjectReference Include="../TKTC.Requires/TKTC.Requires.csproj" PrivateAssets="all"
-                          MergeFrom="true"/>
-        
-        <!-- Shoddy Game Libs References -->
-        <Reference Include="$(GameLibsDir)Assembly-CSharp.dll" GameLib="true" 
-            MergeInto="true"/>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.10" PrivateAssets="all" />
+        <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all" />
+
+        <PackageReference Include="CessilCellsCeaChells.MSBuild" Version="0.2.0" PrivateAssets="all" />
+        <ProjectReference Include="../TKTC.Requires/TKTC.Requires.csproj" PrivateAssets="all" MergeFrom="true" />
     </ItemGroup>
 </Project>
