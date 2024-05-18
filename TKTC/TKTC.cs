@@ -18,10 +18,7 @@ public class TKTC : BaseUnityPlugin {
         Instance = this;
 
         Patch();
-
-        Logger.LogDebug($"Encoded: {(byte)ShopItemCategory.TeamKillTotalConversion} | " +
-                        $"Reflection: {(byte)Enum.Parse<ShopItemCategory>(Requires.ShopItemCategory_TKTC_Name)}");
-
+        
         Logger.LogDebug(GameHandler.Instance);
 
         Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");

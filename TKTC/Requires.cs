@@ -1,4 +1,4 @@
-﻿using CessilCellsCeaChells.CeaChore;
+using CessilCellsCeaChells.CeaChore;
 using TKTC;
 
 [assembly: RequiresEnumInsertion(typeof(ShopItemCategory), Requires.ShopItemCategory_TKTC_Name)]

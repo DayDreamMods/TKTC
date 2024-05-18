@@ -23,9 +23,6 @@ outdir = "../dist"
 [[build.copy]]
 source = "../TKTC/bin/Release/netstandard2.1/TeamKillTotalConversion.dll"
 target = "/BepInEx/plugins/TKTC/"
-[[build.copy]]
-source = "../TKTC.Requires/bin/Release/netstandard2.1/TKTC.Requires.dll"
-target = "/BepInEx/plugins/TKTC/"
 
 [publish]
 communities = [ "content-warning" ]
