@@ -37,7 +37,7 @@
         
         <PackageReference Include="rivinwin.MortalEnemies" Version="1.0.0" PrivateAssets="all"/>
 
-        <PackageReference Include="CessilCellsCeaChells.MSBuild" Version="0.3.3-f1" PrivateAssets="all" />
+        <PackageReference Include="CessilCellsCeaChells.MSBuild" Version="0.3.4" PrivateAssets="all" />
         <ProjectReference Include="../TKTC.Requires/TKTC.Requires.csproj" PrivateAssets="all" MergeFrom="true" />
     </ItemGroup>
 </Project>
