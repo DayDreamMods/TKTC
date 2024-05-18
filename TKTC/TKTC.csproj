@@ -37,11 +37,7 @@
         
         <PackageReference Include="rivinwin.MortalEnemies" Version="1.0.0" PrivateAssets="all"/>
 
-        <PackageReference Include="CessilCellsCeaChells.MSBuild" Version="0.3.2" PrivateAssets="all" />
+        <PackageReference Include="CessilCellsCeaChells.MSBuild" Version="0.3.3" PrivateAssets="all" />
         <ProjectReference Include="../TKTC.Requires/TKTC.Requires.csproj" PrivateAssets="all" MergeFrom="true" />
     </ItemGroup>
-
-    <Target Name="Test" BeforeTargets="FindReferenceAssembliesForReferences;Merge">
-        <Exec Command="echo %(Reference.HintPath)"/>
-    </Target>
 </Project>
