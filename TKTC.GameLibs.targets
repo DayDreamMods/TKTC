@@ -1,24 +1,19 @@
 <Project>
+    <!-- This is where things get interesting -->
     <PropertyGroup>
-        <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
-        <CI_REFERENCES>$(SolutionDir)libs/</CI_REFERENCES>
-        <GameLibsDir Condition="'$(CI)' != 'true'">$(CW_REFERENCES)</GameLibsDir>
-        <GameLibsDir Condition="'$(CI)' == 'true'">$(CI_REFERENCES)</GameLibsDir>
+        <!-- $(STEAMAPPS) should point to steamapps/common or do nothing and build from gamelibs -->
+        <ContentWarning>$(STEAMAPPS)Content Warning</ContentWarning>
+        
+        
+        <SmartRefs Condition="!Exists('$(ContentWarning)')">true</SmartRefs>
+        <ConfigBuild Condition="'$(Configuration)' == 'ShoddyGameLibs'">true</ConfigBuild>
     </PropertyGroup>
-    
-    <Target Name="BuildLog" BeforeTargets="Build" Condition="'$(CI)' == 'true'">
-        <Message Importance="high" Text="Loading Refs! $(GameLibsDir)"/>
-    </Target>
+    <ItemGroup>
+        <!-- Shoddy Game Libs References -->
+        <PackageReference Include="ShoddyGameLibs" Version="1.1.5" PrivateAssets="all"
+                          GameFilesDir="$(ContentWarning)" GameLibsFileDir="$(MSBuildThisFileDirectory)TKTC.GameLibs"
+                          BuildGameLibs="$(ConfigBuild)" BuildFromGameLibs="$(SmartRefs)"/>
 
-    <!-- Strip and zip on local machines build success -->
-    <Target Name="StripPublicizePostBuild" AfterTargets="Build" Condition="'$(CI)' != 'true' and '$(Configuration)' == 'ShoddyGameLibs'">
-        <MakeDir Directories="$(CI_REFERENCES)"/>
-        <ItemGroup>
-            <GameLibReferences Include="@(Reference)" Condition="'%(Reference.GameLib)' == 'true' "/>
-        </ItemGroup>
-        <Exec Condition="'@(GameLibReferences)' != ''" 
-              Command="dotnet assembly-publicizer &quot;%(GameLibReferences.Identity)&quot; --strip-only --overwrite --output &quot;$(CI_REFERENCES)%(FileName).dll&quot;" />
-        <ZipDirectory DestinationFile="$(SolutionDir)TKTC.GameLibs" SourceDirectory="$(CI_REFERENCES)" Overwrite="true" />
-        <RemoveDir Directories="$(CI_REFERENCES)"/>
-    </Target>
+        <Reference Include="Assembly-CSharp" ShoddyGameLib="true" MergeInto="true"/>
+    </ItemGroup>
 </Project>

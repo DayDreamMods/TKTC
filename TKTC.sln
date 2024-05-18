@@ -21,7 +21,6 @@ Global
 		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.ShoddyGameLibs|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.ShoddyGameLibs|Any CPU.Build.0 = Debug|Any CPU
+		{BD61A9AA-C36D-4326-AF43-3438401F8E23}.ShoddyGameLibs|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 EndGlobal
