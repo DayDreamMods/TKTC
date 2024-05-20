@@ -37,13 +37,11 @@
         <PackageReference Include="MinVer" Version="4.*" PrivateAssets="all" />
         <PackageReference Include="CessilCellsCeaChells" Version="0.3.4" PrivateAssets="all" />
         
-        <PackageReference Include="rivinwin.MortalEnemies" Version="1.0.0" PrivateAssets="all"/>
+        <PackageReference Include="rivinwin.MortalEnemies" Version="1.0.0" PrivateAssets="all" />
         
         <!-- Shoddy Game Libs References -->
-        <PackageReference Include="ShoddyGameLibs" Version="1.2.3" PrivateAssets="all"
-                          GameFilesDir="$(ContentWarning)" GameLibsFileDir="$(MSBuildThisFileDirectory)TKTC.GameLibs"
-                          BuildGameLibs="$(ConfigBuild)" BuildFromGameLibs="$(SmartRefs)"/>
+        <PackageReference Include="ShoddyGameLibs" Version="1.2.3" PrivateAssets="all" GameFilesDir="$(ContentWarning)" GameLibsFileDir="$(MSBuildThisFileDirectory)TKTC.GameLibs" BuildGameLibs="$(ConfigBuild)" BuildFromGameLibs="$(SmartRefs)" />
 
-        <Reference Include="Assembly-CSharp" ShoddyGameLib="true" MergeInto="true"/>
+        <Reference Include="Assembly-CSharp" ShoddyGameLib="true" MergeInto="true" />
     </ItemGroup>
 </Project>
