@@ -20,11 +20,18 @@ namespace TKTC.Guns.AmmoPools
 			internal set { amount = value; }
 		}
 
+		private float clipSize;
+		public float ClipSize
+		{
+			get { return clipSize; }
+			internal set { clipSize = value; }
+		}
+
 		private float capacity;
 		public float Capacity
 		{
 			get { return capacity; }
-			internal set { capacity = value; }
+			internal set { capacity = value - (value % clipSize); } // When setting with Property enforce multiple of clipsize
 		}
 
 		private List<AmmoPool_Collection> parentCollections = new();
