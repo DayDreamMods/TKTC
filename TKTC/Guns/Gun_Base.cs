@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using TKTC.Guns.AmmoPools;
 using TKTC.Guns.Projectiles;
 using UnityEngine;
@@ -11,44 +11,94 @@ namespace TKTC.Guns
 {
 	public class Gun_Base : MonoBehaviour
 	{
-		public struct SelectorSwitch
+		// SELECTOR SWITCH
+		
+		public class SelectorState
 		{
-			public enum SwitchState
+			public string name;
+			public float burstWait; // the total time between shots that are not in the same burst is burstWait + autoWait, so when burstSize == 1 consider setting 
+			public float autoWait;
+			public float blowBackWait;
+			public float burstSize;
+			public bool triggerBlocked;
+			public bool isAutomatic;
+			public SelectorState(string newName, float newAutoRate, float newBurstRate, float newburstSize, bool newTriggerBlocked, bool newAuto)
 			{
-				Safe,
-				Single,
-				Burst,
-				Auto
+				name = newName;
+				burstWait = newBurstRate;
+				autoWait = newAutoRate;
+				burstSize = newburstSize;
+				triggerBlocked = newTriggerBlocked;
+				isAutomatic = newAuto;
+				blowBackWait = Mathf.Min(burstWait, autoWait) / 3f; // needs to be reworked when burstSize == 0 to disregard burstWait
 			}
-			public SwitchState state;
+		}
+
+		protected List<SelectorState> selectorStates = new();
+		protected SelectorState? currentState;
+		protected SelectorState? CurrentState
+		{
+			get { return currentState; }
+			set
+			{
+				firing = false;
+				if (value == null) return;
+				switch (currentState) // Old state
+				{
+					
+				}
+				switch (value) // New value
+				{
+
+				}
+				currentState = value;
+			}
 		}
 
 		// VARIABLES
-		private string _name;
+		protected string _name = "ERROR_DEFAULT";
+		protected bool firing;
 
-		private bool roundChambered;
+		protected IEnumerator? fireRoutine;
+		protected float nextFireTime;
+		public bool isBlowBack;
+
+		internal Projectile_Base? chamberedProjectile;
+		protected bool roundChambered, roundChamberedAfterLastCycle;
 		public bool RoundChambered
 		{
 			get { return roundChambered; }
 			private set { }
 		}
 
-		private Projectile_Base? chamberedProjectile;
-		private SelectorSwitch selectorSwitch;
-		private bool waitOnTriggerToCycleChamber;
+		protected Transform? muzzleTip;
+		protected float RoundsToFire
+		{
+			get
+			{
+				if (currentState is null) return 0f;
+				if (magezine is null) return roundChambered ? 1f : 0f;
+				if (!isBlowBack) return 1f;
+				if (currentState.isAutomatic) return magezine.Amount;
+				return Mathf.Min(currentState.burstSize, magezine.Amount);
+			}
+			set { }
+		}
 
-		private float singleRoF, burstRoF, automaticRoF;
-		private float burstRoundsCount; // its weird its a float, but energy weapons
-
-		private bool roundChamberedAfterLastCycle;
-		private bool hasBolt = true;
-		private bool canDropBoltUnchambered;
-        private AmmoPool_Base? magezine;
+		protected bool hasBolt = true;
+		protected bool canDropBolt;
+		protected AmmoPool_Base? magezine;
 
 		// EVENTS
 		void Start()
 		{
 			magezine = new AmmoPool_Base();
+			selectorStates.Add(new("Safe", 0.3f, 0.0f, 1f, true, true));
+			currentState = selectorStates[1];
+		}
+
+		void Update()
+		{
 		}
 
 		void OnDestroy()
@@ -61,60 +111,98 @@ namespace TKTC.Guns
 
 		public virtual void PullTrigger(bool sustained = false)
 		{
-			if (!roundChambered)
+			if (!canDropBolt || currentState is null || currentState.triggerBlocked)
 			{
-				if (canDropBoltUnchambered)
-				{
-					canDropBoltUnchambered = false;
-                    // TODO: sound effect of bolt dropping
-                }
+				firing = false;
 				return;
 			}
 
-			bool didFire;
-			switch (selectorSwitch.state)
+			if (!roundChambered)
 			{
-				case SelectorSwitch.SwitchState.Single:
-					didFire = Fire();
-					break;
-				case SelectorSwitch.SwitchState.Burst:
-                    StartCoroutine(FireBurst((int)magezine.TryRemoveUpTo(burstRoundsCount)));
-                    break;
-                case SelectorSwitch.SwitchState.Auto:
-					break;
-                default:
-					break;
+				if (canDropBolt)
+				{
+					canDropBolt = false;
+                    // TODO: sound effect of bolt dropping
+                }
+				firing = false;
+				return;
 			}
-			// Cycle chamber immediately if atuomatic blowback bolt
-			if (!waitOnTriggerToCycleChamber) CycleChamber();
+
+			firing = true;
+			fireRoutine = Fire(RoundsToFire, currentState);
 		}
 
-		protected IEnumerable FireBurst(int numToFire)
+		protected virtual IEnumerator Fire(float toFire, SelectorState stateToFireIn) // this is a sexy routine if i do say so myself
 		{
-            yield return new WaitForSeconds(burstRoF);
-        }
+			nextFireTime = Mathf.Max(Time.time, nextFireTime); // we're not updating this value when the routine isnt running, so we have to catch it up at the begining
+			
+			if (stateToFireIn is null) yield break;
 
-		public virtual void ReleaseTrigger(bool firedOnPull)
-		{
-			// Cycle chamber on mouse release if manual bolt action
-            if (waitOnTriggerToCycleChamber) CycleChamber();
+			float shotsFired = 0f;
+			while (shotsFired < toFire)
+			{
+				for (int i = 0; i < stateToFireIn.burstSize; i++)
+				{
+					shotsFired++;
+					chamberedProjectile?.Fire();
+					nextFireTime += stateToFireIn.burstWait;
+					if (isBlowBack)
+					{
+						yield return new WaitForSeconds(stateToFireIn.blowBackWait); // ok to use waitforseconds here as long as were sure that bbWait < burstWawit or autoWait depending on gun
+						if (!CycleChamber() || !firing || shotsFired >= toFire)
+						{
+							// Smoke from open bolt? maybe keep track of number of shots fired in last few seconds?
+							nextFireTime += stateToFireIn.autoWait;
+							yield break;
+						}
+					}
+					else
+					{
+						nextFireTime += stateToFireIn.burstWait;
+						yield break;
+					}
+					yield return new WaitUntil(() => Time.time >= nextFireTime);
+				}
+				if (stateToFireIn.isAutomatic)
+				{
+					nextFireTime += stateToFireIn.autoWait;
+					yield return new WaitUntil(() => Time.time >= nextFireTime);
+				} else
+				{
+					yield break;
+				}
+			}
 		}
 
-		protected virtual bool Fire()
+		public virtual void ReleaseTrigger()
 		{
-			if (roundChambered)
-			{
-				chamberedProjectile.Fire();
-			}
-			return false;
+			firing = false;
 		}
 
 		protected bool CycleChamber()
 		{
-            // if (roundChamberedAfterLastCycle) TODO: trigger ejection animation
-            roundChambered = magezine.TryRemoveOne();
-            roundChamberedAfterLastCycle = roundChambered;
-			if (hasBolt) canDropBoltUnchambered = true;
+			if (roundChamberedAfterLastCycle) ; // TODO: trigger ejection animation
+			canDropBolt = true;
+			if (magezine is not null)
+			{
+				roundChambered = magezine.TryRemoveOne();
+				if (roundChambered)
+				{
+					chamberedProjectile = magezine.projectilePool.Get();
+					chamberedProjectile?.transform.SetParent(muzzleTip, false);
+				}
+				roundChamberedAfterLastCycle = roundChambered;
+			}
+			else
+			{
+				roundChambered = false;
+			}
+			if (hasBolt)
+			{
+				canDropBolt = true;
+				// TODO: dont depend on currentState here. probably fine but a bit unsafe
+				if (!isBlowBack) nextFireTime = Time.time + currentState!.autoWait; // if it has blowback the timer is handled in Fire(), if its manual cocking it gets handled here
+			}
 
             return roundChambered;
 		}

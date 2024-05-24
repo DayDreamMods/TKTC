@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TKTC.Guns.Projectiles;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace TKTC.Guns.AmmoPools
 {
-	internal class AmmoPool_Base
+	public class AmmoPool_Base : MonoBehaviour
 	{
         // VARIABLES
         protected bool autoRequestRefillFromParentCollections;
-        protected List<AmmoPool_Collection> parentCollections = new();
+        internal List<AmmoPool_Collection> parentCollections = new();
 
+		private float muzzleVelocity = 700f;
+		internal IObjectPool<Projectile_Base> projectilePool;
+
+		private IEnumerator projectileSpawnRoutine;
 		private int poolSize;
         const int MAX_POOL_SIZE = 256;
         protected byte minimumPoolSize = 2; // We generally want to base the pool size off of clipSize but in cases where clipSize is small and reload times are small, like rocket launchers, this will be necessary to set
 		protected bool usingProjectilePool;
-		protected List<Projectile_Base> projectilePool;
+		protected int lastPoolIterator;
 
         protected System.Type projectileType = typeof(Projectile_Base); // Id like to use null, but nullable types suck, so check for projectileType == Projectile_Base as a failure state
 		public System.Type ProjectileType
@@ -23,7 +29,17 @@ namespace TKTC.Guns.AmmoPools
 			internal set { projectileType = value; }
 		}
 
-        protected float amount;
+		internal Projectile_Base? projectileToClone;
+		internal Projectile_Base? ProjectileToClone
+		{
+			get
+			{
+                // Get from ammoFactory
+			}
+			private set { }
+		}
+
+		protected float amount;
 		public float Amount
 		{
 			get { return amount; }
@@ -44,7 +60,12 @@ namespace TKTC.Guns.AmmoPools
 			internal set { capacity = value - (value % clipSize); } // When setting with Property enforce multiple of clipsize
 		}
 
-		// CONSTRUCTORS
+		// EVENTS
+		void Awake()
+		{
+
+		}
+
 		public AmmoPool_Base()
 		{
 			// access current round settings to determine initial fill amounts
@@ -126,33 +147,41 @@ namespace TKTC.Guns.AmmoPools
 			parentCollections.Remove(oldParent);
 		}
 
-        public void EnableProjectilePool()
+		private Projectile_Base CreateProjectile()
 		{
-			usingProjectilePool = true;
-			projectilePool = new();
+			Projectile_Base projectileInstance = Instantiate(ProjectileToClone);
+			projectileInstance.parentPool = projectilePool;
+			return projectileInstance;
+		}
 
-			poolSize = Mathf.Clamp((int)Mathf.Ceil(clipSize * 1.1f), minimumPoolSize, MAX_POOL_SIZE); // we do clipsize * 1.1 so that a high fire rate high speed reload gun can mag dump and get 10% into their next clip before the first projetile is available again in the pool
+		// invoked when returning an item to the object pool
+		private void OnReleaseToPool(Projectile_Base pooledObject)
+		{
+			pooledObject.gameObject.SetActive(false);
+		}
 
-			for (int i = 0; i < poolSize)
-			{
+		// invoked when retrieving the next item from the object pool
+		private void OnGetFromPool(Projectile_Base pooledObject)
+		{
+			pooledObject.gameObject.SetActive(true);
+		}
 
-			}
+		// invoked when we exceed the maximum number of pooled items (i.e. destroy the pooled object)
+		private void OnDestroyPooledObject(Projectile_Base pooledObject)
+		{
+			Destroy(pooledObject.gameObject);
+		}
+
+		public void EnableProjectilePool()
+		{
+			projectilePool = new ObjectPool<Projectile_Base>(CreateProjectile,
+				OnGetFromPool, OnReleaseToPool, OnDestroyPooledObject,
+				true, poolSize, 120);
 		}
 
 		public void DisableProjectilePool()
 		{
-
-		}
-
-		private IEnumerable SpawnProjectilesInPool(GameObject toClone, int numToSpawn) // Spawn one projectile into the pool per frame, instead of say 70 at once for one gun when youre adding multiple guns at once.
-		{
-			int numSpawned = 0;
-			while (numSpawned < numToSpawn)
-			{
-				GameObject newProjectile = GameObject.Instantiate(toClone);
-				projectilePool.Add(newProjectile.GetComponent<Projectile_Base>());
-				yield return new WaitForSeconds(0.00001f);
-			}
+			projectilePool.Clear();
 		}
     }
 }
