@@ -1,37 +1,65 @@
-name: Build
+name: build
 
 on:
-  push:
-    branches: [ dev ]
-  pull_request:
+  workflow_call:
+    inputs:
+      release:
+        description: 'Is Release State'
+        required: false
+        default: false
+        type: boolean
 
+env:
+  CI_RELEASE: ${{ github.event_name == 'release' }}
+  TCLI_API_TOKEN: ${{ secrets.TCLI_API_TOKEN }}
+  NUGET_API_TOKEN: ${{ secrets.NUGET_API_TOKEN }}
+  
 jobs:
   build:
-    name: build
+    name: Build Dotnet Solution
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Sources
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
           filter: tree:0
-
+          
+      - name: Build Changelog
+        uses: RedEyeMods/ReusableWorkflows/.github/workflows/build-changelog.yml@main
+        with:
+          release: ${{ github.event_name == 'release' }}
+          
+      - name: Download Changelog Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: changelog
+          path: ./
+          
       - name: Setup .NET Env
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.203"
-
-      - name: Restore Solution
-        run: |
-          dotnet restore
-          dotnet tool restore
-
+          
       - name: Pack Solution
         run: |
-          dotnet pack --configuration Release
-
-      - name: Upload Thunderstore Artifact
+          dotnet pack --Configuration Release
+          
+      - name: Check for artifacts.txt
+        id: check_artifacts
+        run: |
+          if [ -f artifacts.txt ]; then
+            echo "Artifacts file exists."
+            echo "artifacts_exist=true" >> $GITHUB_ENV
+          else
+            echo "Artifacts file does not exist."
+            echo "artifacts_exist=false" >> $GITHUB_ENV
+          fi
+  
+      - name: Upload artifacts
+        if: env.artifacts_exist == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: thunderstore-build
-          path: dist/*.zip
+          name: build-artifacts
+          path: |
+            $(cat artifacts.txt)
