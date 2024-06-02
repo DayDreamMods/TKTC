@@ -1,0 +1,14 @@
+name: Test
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  run-init:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: |
+          echo hi
+      

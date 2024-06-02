@@ -1,0 +1,11 @@
+name: Repository Setup
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  run-init:
+    name: Initial Repository Setup
+    uses: RedEyeMods/ReusableWorkflows/.github/workflows/init.yml@main
+    secrets:
+      org_pat: ${{ secrets.ORG_PAT }}
