@@ -15,8 +15,15 @@ env:
   NUGET_API_TOKEN: ${{ secrets.NUGET_API_TOKEN }}
   
 jobs:
+  build-changelog:
+    name: Pre-Build
+    uses: RedEyeMods/ReusableWorkflows/.github/workflows/build-changelog.yml@main
+    with:
+      release: ${{ github.event_name == 'release' }}
+    
   build:
     name: Build Dotnet Solution
+    needs: build-changelog
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,11 +31,6 @@ jobs:
         with:
           fetch-depth: 0
           filter: tree:0
-          
-      - name: Build Changelog
-        uses: RedEyeMods/ReusableWorkflows/.github/workflows/build-changelog.yml@main
-        with:
-          release: ${{ github.event_name == 'release' }}
           
       - name: Download Changelog Artifact
         uses: actions/download-artifact@v2
